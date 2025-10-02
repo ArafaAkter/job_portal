@@ -10,10 +10,13 @@
     <header>
         <nav>
             <div class="logo">JobPortal</div>
-            <ul>
+            <ul id="navLinks">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="#" id="logout">Logout</a></li>
+                <li><a href="jobs.html">Jobs</a></li>
+                <li><a href="login.html" id="loginLink">Login</a></li>
+                <li><a href="register.html" id="registerLink">Register</a></li>
+                <li><a href="dashboard.html" id="dashboardLink" style="display:none;">Dashboard</a></li>
+                <li><a href="#" id="logout" style="display:none;">Logout</a></li>
             </ul>
         </nav>
     </header>
@@ -24,13 +27,13 @@
                 <input type="text" id="keyword" placeholder="Keyword">
                 <input type="text" id="location" placeholder="Location">
                 <input type="number" id="salary_min" placeholder="Min Salary">
-                <input type="number" id="salary_max" placeholder="Max Salary">
+                <!-- <input type="number" id="salary_max" placeholder="Max Salary"> -->
                 <button type="submit">Search</button>
             </form>
             <div id="jobsList" class="jobs-grid">
                 <!-- Jobs will be loaded here -->
             </div>
-            <button id="viewMoreBtn" class="btn-primary" style="display:none;">View More</button>
+            <button id="viewMoreBtn" style="display:none;">View More</button>
         </section>
     </main>
     <footer>

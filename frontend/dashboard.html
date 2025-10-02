@@ -6,64 +6,183 @@
     <title>Dashboard - Job Portal</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="dashboard">
     <header>
         <nav>
             <div class="logo">JobPortal</div>
-            <ul>
-                <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="jobs.html">Jobs</a></li>
-                <li id="postJobLink" style="display:none;"><a href="post-job.html">Post Job</a></li>
-                <li><a href="#" id="logout">Logout</a></li>
-            </ul>
+            <div class="tabs">
+                <button class="active" data-tab="dashboard">Dashboard</button>
+                <button id="jobsTab" data-tab="jobs">Jobs</button>
+                <button id="logout">Logout</button>
+            </div>
         </nav>
     </header>
     <main>
-        <section class="dashboard">
-            <h2>Welcome, <span id="userName"></span></h2>
+        <section id="dashboard-content" class="tab-content active">
             <div id="jobSeekerDashboard" style="display:none;">
-                <h3>Your Profile</h3>
-                <p>Name: <span id="userNameDisplay"></span></p>
-                <p>Skills: <span id="userSkills"></span></p>
-                <p>Resume: <span id="userResume"></span></p>
-                <button id="editProfileBtn" class="btn-secondary">Edit Profile</button>
-                <div id="profileForm" style="display:none;">
-                    <form id="updateProfileForm">
-                        <label>Name: <input type="text" id="profileName"></label>
-                        <label>Skills: <input type="text" id="profileSkills"></label>
-                        <label>Resume: <input type="text" id="profileResume"></label>
-                        <button type="submit">Update</button>
-                        <button type="button" id="cancelEdit">Cancel</button>
-                    </form>
+                <div class="dashboard-layout">
+                    <div class="dashboard-sidebar">
+                        <h3>Job Seeker</h3>
+                        <nav class="dashboard-nav">
+                            <button class="nav-item active" data-section="profile">Profile</button>
+                            <button class="nav-item" data-section="applied">Applied Jobs</button>
+                            <button class="nav-item" data-section="browse">Browse Jobs</button>
+                        </nav>
+                    </div>
+                    <div class="dashboard-content">
+                        <div id="profile-content" class="section active">
+                            <h2>Your Profile</h2>
+                            <div class="dashboard-card profile-section">
+                                <div class="profile-card">
+                                    <div class="profile-info">
+                                        <p><strong>Name:</strong> <span id="userNameDisplay"></span></p>
+                                        <p><strong>Skills:</strong> <span id="userSkills"></span></p>
+                                        <p><strong>Resume:</strong> <span id="userResume"></span></p>
+                                    </div>
+                                    <button id="editProfileBtn">Edit Profile</button>
+                                </div>
+                                <div id="profileForm" class="profile-form" style="display:none;">
+                                    <form id="updateProfileForm">
+                                        <label>Name: <input type="text" id="profileName" required></label>
+                                        <label>Skills: <input type="text" id="profileSkills"></label>
+                                        <label>Resume: <textarea id="profileResume"></textarea></label>
+                                        <button type="submit">Update</button>
+                                        <button type="button" id="cancelEdit">Cancel</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="applied-content" class="section">
+                            <h2>Applied Jobs</h2>
+                            <div class="dashboard-card applied-jobs-section">
+                                <div id="appliedJobs" class="jobs-list"></div>
+                            </div>
+                        </div>
+                        <div id="browse-content" class="section">
+                            <h2>Browse Jobs</h2>
+                            <div class="dashboard-card browse-jobs-section">
+                                <div id="browseJobs" class="jobs-list"></div>
+                                <button id="loadMoreJobsBtn" style="display:none;">Load More</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <h3>Applied Jobs</h3>
-                <div id="appliedJobs"></div>
             </div>
             <div id="employerDashboard" style="display:none;">
-                <h3>Your Posted Jobs</h3>
-                <div id="postedJobs"></div>
-                <a href="post-job.html" class="btn-primary">Post New Job</a>
+                <div class="dashboard-layout">
+                    <div class="dashboard-sidebar">
+                        <h3>Employer</h3>
+                        <nav class="dashboard-nav">
+                            <button class="nav-item active" data-section="applicants">Applicants</button>
+                            <button class="nav-item" data-section="post-job">Post Job</button>
+                        </nav>
+                    </div>
+                    <div class="dashboard-content">
+                        <div id="applicants-content" class="section active">
+                            <h2>Manage Applicants</h2>
+                            <div class="dashboard-card applicants-section">
+                                <div id="applicantsList" class="jobs-list"></div>
+                            </div>
+                        </div>
+                        <div id="post-job-content" class="section">
+                            <section class="form-section">
+                                <h2>Post New Job</h2>
+                                <form id="postJobForm">
+                                    <div class="form-group">
+                                        <label for="title">Job Title</label>
+                                        <input type="text" id="title" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="company_name">Company Name</label>
+                                        <input type="text" id="company_name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="description">Job Description</label>
+                                        <textarea id="description" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="requirements">Requirements</label>
+                                        <textarea id="requirements"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="salary">Salary</label>
+                                        <input type="text" id="salary">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="location">Location</label>
+                                        <input type="text" id="location" required>
+                                    </div>
+                                    <button type="submit">Post Job</button>
+                                </form>
+                            </section>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div id="adminDashboard" style="display:none;">
-                <h2>Admin Dashboard</h2>
-                <div class="admin-actions">
-                    <button id="viewAnalyticsBtn" class="btn-primary">View Analytics</button>
-                    <button id="manageUsersBtn" class="btn-primary">Manage Users</button>
-                    <button id="manageJobsBtn" class="btn-primary">Manage Jobs</button>
-                </div>
-                <div id="analyticsSection" class="admin-section" style="display:none;">
-                    <h3>Analytics</h3>
-                    <div id="analytics"></div>
-                </div>
-                <div id="usersSection" class="admin-section" style="display:none;">
-                    <h3>Manage Users</h3>
-                    <div id="usersList"></div>
-                </div>
-                <div id="jobsSection" class="admin-section" style="display:none;">
-                    <h3>Manage Jobs</h3>
-                    <div id="adminJobsList"></div>
+                <div class="admin-layout">
+                    <div class="admin-sidebar">
+                        <h3>Admin Panel</h3>
+                        <nav class="admin-nav">
+                            <button type="button" data-section="analytics" onclick="showSection('analytics')">
+                                <span class="nav-text">Analytics</span>
+                            </button>
+                            <button type="button" data-section="users" onclick="showSection('users')">
+                                <span class="nav-text">Manage Users</span>
+                            </button>
+                            <button type="button" data-section="jobs" onclick="showSection('jobs')">
+                                <span class="nav-text">Manage Jobs</span>
+                            </button>
+                            <button type="button" data-section="reports" onclick="showSection('reports')">
+                                <span class="nav-text">Reports</span>
+                            </button>
+                        </nav>
+                    </div>
+                    <div class="admin-content">
+                        <div id="analyticsSection" class="content-section active">
+                            <h2> Analytics</h2>
+                            <div id="analytics" class="analytics-grid"></div>
+                        </div>
+                        <div id="usersSection" class="content-section">
+                            <h2> Manage Users</h2>
+                            <div id="usersList"></div>
+                        </div>
+                        <div id="jobsSection" class="content-section">
+                            <h2> Manage Jobs</h2>
+                            <div id="adminJobsList"></div>
+                        </div>
+                        <div id="reportsSection" class="content-section">
+                            <h2>Reports</h2>
+                            <div id="downloadsTab" class="report-content active">
+                                <div class="admin-actions">
+                                    <button onclick="downloadReport('users','csv')">Download Users CSV</button>
+                                    <button onclick="downloadReport('jobs','csv')">Download Jobs CSV</button>
+                                    <button onclick="downloadReport('applications','csv')">Download Applications CSV</button>
+                                </div>
+                                <div id="reportsPreview"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </section>
+        <section id="jobs-content" class="tab-content">
+            <h2>Available Jobs</h2>
+            <form id="searchForm" class="search-form">
+                <input type="text" id="keyword" placeholder="Keyword">
+                <input type="text" id="location" placeholder="Location">
+                <input type="number" id="salary_min" placeholder="Min Salary">
+                <input type="number" id="salary_max" placeholder="Max Salary">
+                <button type="submit">Search</button>
+            </form>
+            <div id="jobsList" class="jobs-grid">
+                <!-- Jobs will be loaded here -->
+            </div>
+            <button id="viewMoreBtn" style="display:none;">View More</button>
+        </section>
+        <section id="post-job-content" class="tab-content">
+            <!-- Employers can post jobs via the dedicated Post Job page -->
+            <p>This section is only used to navigate to the Post Job page for employers.</p>
         </section>
     </main>
     <footer>

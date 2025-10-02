@@ -1,13 +1,5 @@
 -- Oracle 11g SQL script to create job portal database tables
 
--- Drop tables if exist
-DROP TABLE applications CASCADE CONSTRAINTS;
-DROP TABLE jobs CASCADE CONSTRAINTS;
-DROP TABLE users CASCADE CONSTRAINTS;
-DROP SEQUENCE users_seq;
-DROP SEQUENCE jobs_seq;
-DROP SEQUENCE applications_seq;
-
 -- Create sequences for auto-incrementing IDs
 CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE jobs_seq START WITH 1 INCREMENT BY 1;
@@ -22,7 +14,6 @@ CREATE TABLE users (
     role VARCHAR2(50) NOT NULL CHECK (role IN ('job_seeker', 'employer', 'admin')),
     skills VARCHAR2(1000),
     resume VARCHAR2(500),
-    profile_pic VARCHAR2(500),
     company_name VARCHAR2(255),
     company_description VARCHAR2(1000)
 );
@@ -36,8 +27,12 @@ CREATE TABLE jobs (
     requirements VARCHAR2(2000),
     salary VARCHAR2(100),
     location VARCHAR2(255),
+    company_name VARCHAR2(255),
     FOREIGN KEY (employer_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+-- Alter table if needed
+-- ALTER TABLE jobs ADD company_name VARCHAR2(255);
 
 -- Applications table
 CREATE TABLE applications (
