@@ -81,10 +81,16 @@ if (document.getElementById('registerForm')) {
     document.getElementById('role').addEventListener('change', () => {
         const role = document.getElementById('role').value;
         const employerFields = document.getElementById('employerFields');
+        const seekerFields = document.getElementById('seekerFields');
         if (role === 'employer') {
             employerFields.style.display = 'block';
+            seekerFields.style.display = 'none';
+        } else if (role === 'job_seeker') {
+            employerFields.style.display = 'none';
+            seekerFields.style.display = 'block';
         } else {
             employerFields.style.display = 'none';
+            seekerFields.style.display = 'none';
         }
     });
 
@@ -96,10 +102,12 @@ if (document.getElementById('registerForm')) {
         const role = document.getElementById('role').value;
         const company_name = document.getElementById('company_name')?.value || null;
         const company_description = document.getElementById('company_description')?.value || null;
+        const skills = document.getElementById('skills')?.value || null;
+        const resume = document.getElementById('resume')?.value || null;
         try {
             await apiRequest('/api/auth/register', {
                 method: 'POST',
-                body: JSON.stringify({ name, email, password, role, company_name, company_description })
+                body: JSON.stringify({ name, email, password, role, company_name, company_description, skills, resume })
             });
             alert('Registration successful! Please login.');
             window.location.href = '/login.html';
@@ -324,7 +332,9 @@ async function loadPostedJobs() {
 
 async function loadApplicants() {
     try {
+        console.log('Loading applicants');
         const applicants = await apiRequest('/api/jobs/applicants');
+        console.log('Applicants data:', applicants);
         const applicantsDiv = document.getElementById('applicantsList');
         applicantsDiv.innerHTML = '';
         if (applicants.length === 0) {
@@ -351,11 +361,12 @@ async function loadApplicants() {
                     appDiv.style.borderRadius = '8px';
                     const status = app.STATUS;
                     const statusClass = status === 'accepted' ? 'status-accepted' : status === 'rejected' ? 'status-rejected' : status === 'shortlisted' ? 'status-shortlisted' : status === 'reviewed' ? 'status-reviewed' : 'status-pending';
+                    const resume = app.RESUME || 'Not specified';
+                    const resumeDisplay = resume.startsWith('http') ? `<a href="${resume}" target="_blank">${resume}</a>` : resume;
                     appDiv.innerHTML = `
-                        <p><strong>Applicant ID:</strong> ${app.app_id}</p>
-                        <p><strong>Email:</strong> ${app.EMAIL}</p>
+                        <p><strong>Name:</strong> ${app.NAME}</p>
                         <p><strong>Skills:</strong> ${app.SKILLS || 'Not specified'}</p>
-                        <p><strong>Resume:</strong> ${app.RESUME || 'Not specified'}</p>
+                        <p><strong>Resume:</strong> ${resumeDisplay}</p>
                         <p><strong>Status:</strong> <span class="status ${statusClass}">${status}</span></p>
                         <div class="job-actions">
                             <button onclick="updateStatus(${app.job_id}, ${app.app_id}, 'reviewed')">Reviewed</button>
