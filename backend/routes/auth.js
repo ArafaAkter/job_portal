@@ -16,7 +16,7 @@ const dbConfig = {
 
 // Register
 router.post('/register', async (req, res) => {
-  const { name, email, password, role, company_name, company_description } = req.body;
+   const { name, email, password, role, company_name, company_description, skills, resume } = req.body;
   let connection;
   try {
     connection = await oracledb.getConnection(dbConfig);
@@ -27,8 +27,8 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'User already exists' });
     }
     const hashedPassword = bcrypt.hashSync(password, 10);
-    await connection.execute(`INSERT INTO users (id, name, email, password, role, company_name, company_description) VALUES (users_seq.nextval, :name, :email, :password, :role, :company_name, :company_description)`,
-      { name, email, password: hashedPassword, role, company_name, company_description }, { autoCommit: true });
+    await connection.execute(`INSERT INTO users (id, name, email, password, role, skills, resume, company_name, company_description) VALUES (users_seq.nextval, :name, :email, :password, :role, :skills, :resume, :company_name, :company_description)`,
+      { name, email, password: hashedPassword, role, skills, resume, company_name, company_description }, { autoCommit: true });
     await connection.close();
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
