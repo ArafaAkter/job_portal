@@ -36,7 +36,7 @@ router.get('/my-jobs', authenticate, authorize('employer'), async (req, res) => 
     const connection = await oracledb.getConnection(dbConfig);
     const result = await connection.execute(
       `SELECT "ID", "EMPLOYER_ID", "TITLE", "DESCRIPTION", "REQUIREMENTS", "SALARY", "LOCATION", "COMPANY_NAME" FROM jobs WHERE "EMPLOYER_ID" = :employer_id ORDER BY "ID" DESC`,
-      { employer_id: req.user.id },
+      { employer_id: Number(req.user.id) },
       { outFormat: oracledb.OUT_FORMAT_OBJECT }
     );
     await connection.close();
@@ -105,7 +105,7 @@ router.post('/', authenticate, authorize('employer'), async (req, res) => {
     const connection = await oracledb.getConnection(dbConfig);
     await connection.execute(
       `INSERT INTO jobs ("ID", "EMPLOYER_ID", "TITLE", "DESCRIPTION", "REQUIREMENTS", "SALARY", "LOCATION", "COMPANY_NAME") VALUES (jobs_seq.NEXTVAL, :employer_id, :title, :description, :requirements, :salary, :location, :company_name)`,
-      { employer_id: req.user.id, title, description, requirements, salary: numSalary, location, company_name },
+      { employer_id: Number(req.user.id), title, description, requirements, salary: numSalary, location, company_name },
       { autoCommit: true }
     );
     await connection.close();
@@ -180,18 +180,18 @@ router.post('/:id/apply', authenticate, authorize('job_seeker'), async (req, res
     const connection = await oracledb.getConnection(dbConfig);
     // Check if already applied
     const check = await connection.execute(
-      `SELECT "ID" FROM applications WHERE "JOB_ID" = :job_id AND "SEEKER_ID" = :seeker_id`,
-      { job_id: Number(id), seeker_id: req.user.id },
-      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+        `SELECT "ID" FROM applications WHERE "JOB_ID" = :job_id AND "SEEKER_ID" = :seeker_id`,
+        { job_id: Number(id), seeker_id: Number(req.user.id) },
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
     );
     if (check.rows.length > 0) {
       await connection.close();
       return res.status(400).json({ error: 'Already applied' });
     }
     await connection.execute(
-      `INSERT INTO applications ("ID", "JOB_ID", "SEEKER_ID") VALUES (applications_seq.NEXTVAL, :job_id, :seeker_id)`,
-      { job_id: Number(id), seeker_id: req.user.id },
-      { autoCommit: true }
+        `INSERT INTO applications ("ID", "JOB_ID", "SEEKER_ID") VALUES (applications_seq.NEXTVAL, :job_id, :seeker_id)`,
+        { job_id: Number(id), seeker_id: Number(req.user.id) },
+        { autoCommit: true }
     );
     await connection.close();
     res.status(201).json({ message: 'Applied successfully' });
@@ -233,7 +233,7 @@ router.get('/applied', authenticate, authorize('job_seeker'), async (req, res) =
         const connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
             `SELECT a."ID" as APP_ID, j."TITLE", j."DESCRIPTION", j."LOCATION", a."STATUS" FROM applications a JOIN jobs j ON a."JOB_ID" = j."ID" WHERE a."SEEKER_ID" = :seeker_id`,
-            { seeker_id: req.user.id },
+            { seeker_id: Number(req.user.id) },
             { outFormat: oracledb.OUT_FORMAT_OBJECT }
         );
         console.log('Applied jobs result:', result.rows);
@@ -251,7 +251,7 @@ router.get('/applicants', authenticate, authorize('employer'), async (req, res) 
         const connection = await oracledb.getConnection(dbConfig);
         const result = await connection.execute(
             `SELECT a."ID" as app_id, a."JOB_ID" as job_id, a."STATUS", j."TITLE" as job_title, u."NAME", u."EMAIL", u."SKILLS", u."RESUME" FROM applications a JOIN jobs j ON a."JOB_ID" = j."ID" JOIN users u ON a."SEEKER_ID" = u."ID" WHERE j."EMPLOYER_ID" = :employer_id ORDER BY a."ID" DESC`,
-            { employer_id: req.user.id },
+            { employer_id: Number(req.user.id) },
             { outFormat: oracledb.OUT_FORMAT_OBJECT }
         );
         await connection.close();
