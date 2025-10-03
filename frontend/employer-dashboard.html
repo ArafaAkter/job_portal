@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employer Dashboard - Job Portal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dashboard">
+    <header>
+        <nav>
+            <div class="logo">JobPortal</div>
+            <div class="tabs">
+                <button class="active" data-tab="dashboard">Dashboard</button>
+                <button data-tab="jobs">Jobs</button>
+                <button id="logout">Logout</button>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <section id="dashboard-content" class="tab-content active">
+            <div id="employerDashboard" style="display:block;">
+                <div class="dashboard-layout">
+                    <div class="dashboard-sidebar">
+                        <h3>Employer</h3>
+                        <nav class="dashboard-nav">
+                            <button class="nav-item active" data-section="applicants">Applicants</button>
+                            <button class="nav-item" data-section="post-job">Post Job</button>
+                        </nav>
+                    </div>
+                    <div class="dashboard-content">
+                        <div id="applicants-content" class="section active">
+                            <h2>Manage Applicants</h2>
+                            <div class="dashboard-card applicants-section">
+                                <div id="applicantsList" class="jobs-list"></div>
+                            </div>
+                        </div>
+                        <div id="post-job-content" class="section">
+                            <section class="form-section">
+                                <h2>Post New Job</h2>
+                                <form id="postJobForm">
+                                    <div class="form-group">
+                                        <label for="title">Job Title</label>
+                                        <input type="text" id="title" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="company_name">Company Name</label>
+                                        <input type="text" id="company_name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="description">Job Description</label>
+                                        <textarea id="description" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="requirements">Requirements</label>
+                                        <textarea id="requirements"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="salary">Salary</label>
+                                        <input type="text" id="salary">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="location">Location</label>
+                                        <input type="text" id="location" required>
+                                    </div>
+                                    <button type="submit">Post Job</button>
+                                </form>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="jobs-content" class="tab-content">
+            <h2>Available Jobs</h2>
+            <form id="searchForm" class="search-form">
+                <input type="text" id="keyword" placeholder="Keyword">
+                <input type="text" id="location" placeholder="Location">
+                <input type="number" id="salary_min" placeholder="Min Salary">
+                <input type="number" id="salary_max" placeholder="Max Salary">
+                <button type="submit">Search</button>
+            </form>
+            <div id="jobsList" class="jobs-grid">
+                <!-- Jobs will be loaded here -->
+            </div>
+            <button id="viewMoreBtn" style="display:none;">View More</button>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Job Portal. All rights reserved.</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

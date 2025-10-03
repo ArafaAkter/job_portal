@@ -20,7 +20,10 @@
         <section class="form-section">
             <h2>Login</h2>
             <form id="loginForm">
-                <div id="errorMessage" class="error-message" style="display: none;"></div>
+                <div id="errorMessage" class="error-message" style="display: none;">
+                    <span id="errorText"></span>
+                    <button type="button" id="closeError" style="float: right;">×</button>
+                </div>
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" required>

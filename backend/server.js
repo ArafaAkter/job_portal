@@ -14,6 +14,12 @@ const dbConfig = {
 
 const app = express();
 
+// Middleware to log API requests
+app.use('/api', (req, res, next) => {
+  console.log(`API Request: ${req.method} ${req.path}`);
+  next();
+});
+
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -96,7 +102,7 @@ const createDatabase = async () => {
         id NUMBER PRIMARY KEY,
         job_id NUMBER NOT NULL,
         seeker_id NUMBER NOT NULL,
-        status VARCHAR2(50) DEFAULT 'applied' CHECK (status IN ('applied', 'accepted', 'rejected')),
+        status VARCHAR2(50) DEFAULT 'applied' CHECK (status IN ('applied', 'reviewed', 'shortlisted', 'accepted', 'rejected')),
         FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
         FOREIGN KEY (seeker_id) REFERENCES users(id) ON DELETE CASCADE
       )`);

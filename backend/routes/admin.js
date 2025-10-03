@@ -155,6 +155,7 @@ router.delete('/jobs/:id', authenticate, authorize('admin'), async (req, res) =>
 
 // Analytics
 router.get('/analytics', authenticate, authorize('admin'), async (req, res) => {
+  console.log('Analytics endpoint hit');
   try {
     const connection = await oracledb.getConnection(dbConfig);
     const users = await connection.execute(`SELECT COUNT(*) as count FROM users`, {}, { outFormat: oracledb.OUT_FORMAT_OBJECT });

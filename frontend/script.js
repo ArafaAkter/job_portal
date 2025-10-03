@@ -34,31 +34,42 @@ async function apiRequest(url, options = {}) {
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
     }
-    // Ensure URL is absolute - use localhost:3000 as base
-    const baseUrl = 'http://localhost:3000';
-    const fullUrl = url.startsWith('http') ? url : `${baseUrl}${url}`;
-    const response = await fetch(fullUrl, {
-        ...options,
-        headers
-    });
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'API request failed');
+    // Use relative URLs assuming frontend is served from the same server
+    const fullUrl = url.startsWith('http') ? url : `${window.location.origin}${url}`;
+    try {
+        const response = await fetch(fullUrl, {
+            ...options,
+            headers
+        });
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'API request failed');
+        }
+        return response.json();
+    } catch (error) {
+        if (error.message.includes('fetch')) {
+            console.log('Network error: Unable to reach server at', fullUrl);
+        } else {
+            console.log('Server error:', error.message);
+        }
+        throw error;
     }
-    return response.json();
 }
 
 // Logout function
 function logout() {
+    console.log('Logout function called');
+    console.log('Removing token');
     removeToken();
-    window.location.href = 'http://localhost:3000/index.html';
+    console.log('Token removed, redirecting to login');
+    window.location.href = '/login.html';
 }
 
 // Check authentication
 function checkAuth() {
     const user = getUser();
     if (!user) {
-        window.location.href = 'http://localhost:3000/login.html';
+        window.location.href = '/login.html';
         return null;
     }
     return user;
@@ -91,7 +102,7 @@ if (document.getElementById('registerForm')) {
                 body: JSON.stringify({ name, email, password, role, company_name, company_description })
             });
             alert('Registration successful! Please login.');
-            window.location.href = 'http://localhost:3000/login.html';
+            window.location.href = '/login.html';
         } catch (error) {
             alert(error.message);
         }
@@ -105,17 +116,38 @@ if (document.getElementById('loginForm')) {
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         const errorDiv = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        console.log('Login attempt:', email);
         try {
+            console.log('Sending login request to /api/auth/login');
             const data = await apiRequest('/api/auth/login', {
                 method: 'POST',
                 body: JSON.stringify({ email, password })
             });
+            console.log('Login response:', data);
             setToken(data.token);
-            window.location.href = 'http://localhost:3000/dashboard.html';
+            console.log('Token set, redirecting to dashboard');
+            if (data.user.role === 'admin') {
+                window.location.href = '/admin-dashboard.html';
+            } else if (data.user.role === 'employer') {
+                window.location.href = '/employer-dashboard.html';
+            } else {
+                window.location.href = '/job-seeker-dashboard.html';
+            }
         } catch (error) {
-            errorDiv.textContent = error.message;
+            console.log('Login error:', error.message);
+            if (error.message.includes('fetch')) {
+                errorText.textContent = 'Unable to connect to server. Please check your connection and try again.';
+            } else {
+                errorText.textContent = error.message;
+            }
             errorDiv.style.display = 'block';
         }
+    });
+
+    // Close error message
+    document.getElementById('closeError').addEventListener('click', () => {
+        document.getElementById('errorMessage').style.display = 'none';
     });
 }
 
@@ -181,7 +213,9 @@ if (document.querySelector('.dashboard')) {
         } else if (user.role === 'admin') {
             document.getElementById('adminDashboard').style.display = 'block';
             // Hide jobs tab for admin
-            document.getElementById('jobsTab').style.display = 'none';
+            if (document.getElementById('jobsTab')) {
+                document.getElementById('jobsTab').style.display = 'none';
+            }
             // Show analytics by default
             showSection('analytics');
         }
@@ -219,7 +253,7 @@ async function loadProfile() {
             resumeSpan.textContent = resume;
         }
     } catch (error) {
-        alert(error.message);
+        console.log('Error loading profile:', error.message);
     }
 }
 
@@ -247,7 +281,7 @@ async function loadAppliedJobs() {
             });
         }
     } catch (error) {
-        alert(error.message);
+        console.log('Error loading applied jobs:', error.message);
     }
 }
 
@@ -284,7 +318,7 @@ async function loadPostedJobs() {
             });
         }
     } catch (error) {
-        alert(error.message);
+        console.log('Error loading posted jobs:', error.message);
     }
 }
 
@@ -336,7 +370,7 @@ async function loadApplicants() {
             }
         }
     } catch (error) {
-        alert(error.message);
+        console.log('Error loading applicants:', error.message);
     }
 }
 
@@ -418,7 +452,7 @@ async function loadAnalytics() {
         html += `</div>`;
         analyticsDiv.innerHTML = html;
     } catch (error) {
-        alert(error.message);
+        console.log('Error loading analytics:', error.message);
     }
 }
 
@@ -440,7 +474,7 @@ async function loadUsers() {
         });
         usersDiv.innerHTML += '</ul>';
     } catch (error) {
-        alert(error.message);
+        console.log('Error loading users:', error.message);
     }
 }
 
@@ -481,7 +515,7 @@ async function loadAdminJobs() {
         });
         jobsDiv.innerHTML += '</ul>';
     } catch (error) {
-        alert(error.message);
+        console.log('Error loading admin jobs:', error.message);
     }
 }
 
@@ -965,7 +999,7 @@ async function viewJobDetails(jobId) {
 async function applyToJob(jobId) {
     const user = getUser();
     if (!user) {
-        window.location.href = 'http://localhost:3000/login.html';
+        window.location.href = '/login.html';
         return;
     }
     try {
@@ -980,7 +1014,7 @@ async function applyToJob(jobId) {
 if (document.getElementById('postJobForm')) {
     const user = checkAuth();
     if (!user || user.role !== 'employer') {
-        window.location.href = 'http://localhost:3000/dashboard.html';
+        window.location.href = '/dashboard.html';
     } else {
         document.getElementById('postJobForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -996,7 +1030,7 @@ if (document.getElementById('postJobForm')) {
                     body: JSON.stringify({ title, company_name, description, requirements, salary, location })
                 });
                 alert('Job posted successfully!');
-                window.location.href = 'http://localhost:3000/dashboard.html';
+                window.location.href = '/dashboard.html';
             } catch (error) {
                 alert(error.message);
             }
@@ -1005,8 +1039,13 @@ if (document.getElementById('postJobForm')) {
 }
 
 // Logout buttons
-document.querySelectorAll('#logout').forEach(btn => {
-    btn.addEventListener('click', logout);
+document.addEventListener('DOMContentLoaded', () => {
+    const logoutBtns = document.querySelectorAll('#logout');
+    console.log('Found logout buttons:', logoutBtns.length);
+    logoutBtns.forEach(btn => {
+        console.log('Adding logout event to button');
+        btn.addEventListener('click', logout);
+    });
 });
 
 // Profile edit

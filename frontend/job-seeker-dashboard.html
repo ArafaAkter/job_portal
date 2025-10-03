@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Seeker Dashboard - Job Portal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dashboard">
+    <header>
+        <nav>
+            <div class="logo">JobPortal</div>
+            <div class="tabs">
+                <button class="active" data-tab="dashboard">Dashboard</button>
+                <button data-tab="jobs">Jobs</button>
+                <button id="logout">Logout</button>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <section id="dashboard-content" class="tab-content active">
+            <div id="jobSeekerDashboard" style="display:block;">
+                <div class="dashboard-layout">
+                    <div class="dashboard-sidebar">
+                        <h3>Job Seeker</h3>
+                        <nav class="dashboard-nav">
+                            <button class="nav-item active" data-section="profile">Profile</button>
+                            <button class="nav-item" data-section="applied">Applied Jobs</button>
+                            <button class="nav-item" data-section="browse">Browse Jobs</button>
+                        </nav>
+                    </div>
+                    <div class="dashboard-content">
+                        <div id="profile-content" class="section active">
+                            <h2>Your Profile</h2>
+                            <div class="dashboard-card profile-section">
+                                <div class="profile-card">
+                                    <div class="profile-info">
+                                        <p><strong>Name:</strong> <span id="userNameDisplay"></span></p>
+                                        <p><strong>Skills:</strong> <span id="userSkills"></span></p>
+                                        <p><strong>Resume:</strong> <span id="userResume"></span></p>
+                                    </div>
+                                    <button id="editProfileBtn">Edit Profile</button>
+                                </div>
+                                <div id="profileForm" class="profile-form" style="display:none;">
+                                    <form id="updateProfileForm">
+                                        <label>Name: <input type="text" id="profileName" required></label>
+                                        <label>Skills: <input type="text" id="profileSkills"></label>
+                                        <label>Resume: <textarea id="profileResume"></textarea></label>
+                                        <button type="submit">Update</button>
+                                        <button type="button" id="cancelEdit">Cancel</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="applied-content" class="section">
+                            <h2>Applied Jobs</h2>
+                            <div class="dashboard-card applied-jobs-section">
+                                <div id="appliedJobs" class="jobs-list"></div>
+                            </div>
+                        </div>
+                        <div id="browse-content" class="section">
+                            <h2>Browse Jobs</h2>
+                            <div class="dashboard-card browse-jobs-section">
+                                <div id="browseJobs" class="jobs-list"></div>
+                                <button id="loadMoreJobsBtn" style="display:none;">Load More</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="jobs-content" class="tab-content">
+            <h2>Available Jobs</h2>
+            <form id="searchForm" class="search-form">
+                <input type="text" id="keyword" placeholder="Keyword">
+                <input type="text" id="location" placeholder="Location">
+                <input type="number" id="salary_min" placeholder="Min Salary">
+                <input type="number" id="salary_max" placeholder="Max Salary">
+                <button type="submit">Search</button>
+            </form>
+            <div id="jobsList" class="jobs-grid">
+                <!-- Jobs will be loaded here -->
+            </div>
+            <button id="viewMoreBtn" style="display:none;">View More</button>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Job Portal. All rights reserved.</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

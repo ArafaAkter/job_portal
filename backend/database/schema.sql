@@ -39,7 +39,7 @@ CREATE TABLE applications (
     id NUMBER PRIMARY KEY,
     job_id NUMBER NOT NULL,
     seeker_id NUMBER NOT NULL,
-    status VARCHAR2(50) DEFAULT 'applied' CHECK (status IN ('applied', 'accepted', 'rejected')),
+    status VARCHAR2(50) DEFAULT 'applied' CHECK (status IN ('applied', 'reviewed', 'shortlisted', 'accepted', 'rejected')),
     FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
     FOREIGN KEY (seeker_id) REFERENCES users(id) ON DELETE CASCADE
 );

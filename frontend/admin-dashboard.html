@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Job Portal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dashboard">
+    <header>
+        <nav>
+            <div class="logo">JobPortal</div>
+            <div class="tabs">
+                <button class="active" data-tab="dashboard">Dashboard</button>
+                <button id="logout">Logout</button>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <section id="dashboard-content" class="tab-content active">
+            <div id="adminDashboard" style="display:block;">
+                <div class="admin-layout">
+                    <div class="admin-sidebar">
+                        <h3>Admin Panel</h3>
+                        <nav class="admin-nav">
+                            <button type="button" data-section="analytics" onclick="showSection('analytics')">
+                                <span class="nav-text">Analytics</span>
+                            </button>
+                            <button type="button" data-section="users" onclick="showSection('users')">
+                                <span class="nav-text">Manage Users</span>
+                            </button>
+                            <button type="button" data-section="jobs" onclick="showSection('jobs')">
+                                <span class="nav-text">Manage Jobs</span>
+                            </button>
+                            <button type="button" data-section="reports" onclick="showSection('reports')">
+                                <span class="nav-text">Reports</span>
+                            </button>
+                        </nav>
+                    </div>
+                    <div class="admin-content">
+                        <div id="analyticsSection" class="content-section active">
+                            <h2> Analytics</h2>
+                            <div id="analytics" class="analytics-grid"></div>
+                        </div>
+                        <div id="usersSection" class="content-section">
+                            <h2> Manage Users</h2>
+                            <div id="usersList"></div>
+                        </div>
+                        <div id="jobsSection" class="content-section">
+                            <h2> Manage Jobs</h2>
+                            <div id="adminJobsList"></div>
+                        </div>
+                        <div id="reportsSection" class="content-section">
+                            <h2>Reports</h2>
+                            <div id="downloadsTab" class="report-content active">
+                                <div class="admin-actions">
+                                    <button onclick="downloadReport('users','csv')">Download Users CSV</button>
+                                    <button onclick="downloadReport('jobs','csv')">Download Jobs CSV</button>
+                                    <button onclick="downloadReport('applications','csv')">Download Applications CSV</button>
+                                </div>
+                                <div id="reportsPreview"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Job Portal. All rights reserved..</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
